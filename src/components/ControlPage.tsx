@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import '../App.css';
 
 const ControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
-  // Состояния для выбранных кнопок (только один выбор в каждой секции)
   const [selectedGrain, setSelectedGrain] = useState<string>('Сухая');
   const [selectedVentilation, setSelectedVentilation] = useState<string>('Охлаждение свежеубранного зерна');
   const [selectedSeason, setSelectedSeason] = useState<string>('Осень');

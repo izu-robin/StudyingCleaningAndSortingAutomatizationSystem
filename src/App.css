@@ -16,7 +16,6 @@ body {
   background-color: #1B1B1B;
 }
 
-/* ========== ГЛАВНАЯ СТРАНИЦА (ФОТО 1) ========== */
 .main-page {
   min-height: 100vh;
   background-color: #1B1B1B;
@@ -25,7 +24,6 @@ body {
   flex-direction: column;
 }
 
-/* Кнопки в верхнем левом углу, расположены сверху вниз (вертикально) */
 .top-left-buttons-vertical {
   position: absolute;
   top: 20px;
@@ -36,7 +34,6 @@ body {
   z-index: 10;
 }
 
-/* Стиль каждой кнопки */
 .nav-btn-vertical {
   display: flex;
   align-items: center;
@@ -56,14 +53,12 @@ body {
   transform: scale(1.02);
 }
 
-/* Иконка внутри кнопки */
 .btn-icon {
      width: 44px;
     height: 84px;
   object-fit: contain;
 }
 
-/* Текст внутри кнопки */
 .nav-btn-vertical span {
   color: #FFFFFF;
   font-size: 14px;
@@ -71,7 +66,6 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* Центр экрана - простое векторное изображение */
 .center-logo-simple {
   flex: 1;
   display: flex;
@@ -86,7 +80,6 @@ body {
   display: block;
 }
 
-/* ========== СТРАНИЦА УПРАВЛЕНИЯ ========== */
 .control-page {
   background-color: #1B1B1B;
   min-height: 100vh;
@@ -109,7 +102,6 @@ body {
   background-color: #3d3d3d;
 }
 
-/* ПЕРВЫЙ БОЛЬШОЙ БЛОК */
 .main-block {
   background-color: #323232;
   border-radius: 8px;
@@ -126,14 +118,12 @@ body {
   letter-spacing: 1px;
 }
 
-/* ТРИ СЕКЦИИ ГОРИЗОНТАЛЬНО */
 .sections-row {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
 }
 
-/* Общий стиль для всех секций */
 .section {
   background-color: #262626;
   border-radius: 8px;
@@ -141,18 +131,15 @@ body {
   min-width: 250px;
 }
 
-/* Левая секция - объединяет все три подсекции */
 .section-left {
   flex: 2;
 }
 
-/* Центральная и правая секции */
 .section-center,
 .section-right {
   flex: 1;
 }
 
-/* Подсекция внутри левой секции */
 .subsection {
   margin-bottom: 25px;
 }
@@ -169,14 +156,12 @@ body {
   margin-bottom: 15px;
 }
 
-/* Обертка для сплошного темного фона под кнопками */
 .buttons-wrapper {
   background-color: #1B1B1B;
   border-radius: 8px;
   padding: 20px;
 }
 
-/* Контейнер для кнопок (горизонтально) */
 .buttons-container {
   display: flex;
   justify-content: space-between;
@@ -184,7 +169,6 @@ body {
   flex-wrap: wrap;
 }
 
-/* Вертикальное расположение кнопок (для вентиляции) */
 .buttons-container.vertical {
   display: flex;
   flex-direction: column;
@@ -200,7 +184,6 @@ body {
   padding: 10px;
 }
 
-/* Кнопки с переносом текста для всех */
 .action-button {
   flex: 1;
   background-color: transparent;
@@ -214,21 +197,19 @@ body {
   transition: all 0.2s ease;
   text-align: center;
   line-height: 1.3;
-  white-space: normal;  /* ← меняем с nowrap на normal */
-  word-break: break-word; /* ← добавляем перенос слов */
+  white-space: normal;  
+  word-break: break-word;
 }
 .action-button:hover {
   background-color: rgba(217, 233, 134, 0.1);
   transform: translateY(-1px);
 }
 
-/* Активное состояние кнопки */
 .action-button.active {
   background-color: #D9E986;
   color: #1B1B1B;
 }
 
-/* Контейнер для подписей (вне темной рамки) */
 .subtitles-container {
   display: flex;
   justify-content: space-between;
@@ -237,7 +218,6 @@ body {
   margin-top: 12px;
 }
 
-/* Вертикальные подписи */
 .subtitles-container.vertical {
   display: flex;
   flex-direction: column;
@@ -249,7 +229,6 @@ body {
   width: 100%;
 }
 
-/* Подпись под кнопкой */
 .button-subtitle {
   flex: 1;
   color: #dbdbdb;
@@ -259,7 +238,6 @@ body {
   min-width: 80px;
 }
 
-/* Заглушка для пустых секций */
 .placeholder-content {
   text-align: center;
   padding: 40px 20px;
@@ -280,12 +258,10 @@ body {
   opacity: 0.7;
 }
 
-/* Нижняя часть (заглушка) */
 .bottom-section-placeholder {
   min-height: 200px;
 }
 
-/* Адаптив для мобильных */
 @media (max-width: 900px) {
   .sections-row {
     flex-direction: column;
@@ -323,8 +299,8 @@ body {
   flex: 1;
   min-width: 0;
   white-space: normal !important;
-  word-break: keep-all;  /* ← не разрывает слова */
-  word-wrap: break-word; /* ← переносит только при необходимости */
+  word-break: keep-all;  
+  word-wrap: break-word; 
   line-height: 1.3;
   padding: 10px 5px;
   font-size: 12px;
@@ -347,7 +323,6 @@ body {
   word-wrap: break-word;
 }
 
-/* ========== ИНДИКАТОРЫ В ЦЕНТРАЛЬНОЙ СЕКЦИИ ========== */
 .indicators-row {
   display: flex;
   gap: 20px;
@@ -364,10 +339,9 @@ body {
   min-width: 0;
 }
 
-/* Пятый индикатор - такой же ширины, но по центру */
 .center-indicator {
   flex: none;
-  width: calc(50% - 10px); /* Половина ширины от двух колонок минус gap */
+  width: calc(50% - 10px); 
 }
 
 .indicator-label {
@@ -415,10 +389,9 @@ body {
   font-weight: bold;
 }
 
-/* Шкала под полоской */
 .indicator-scale {
   position: relative;
-  width: calc(100% - 55px); /* Учитываем ширину value-box (45px + 10px gap) */
+  width: calc(100% - 55px); 
   height: 20px;
   margin-top: 8px;
   margin-left: 0;
@@ -433,17 +406,14 @@ body {
   white-space: nowrap;
 }
 
-/* Первая метка не смещается */
 .scale-mark:first-child {
   transform: translateX(0);
 }
 
-/* Последняя метка прижимается к правому краю */
 .scale-mark:last-child {
   transform: translateX(-100%);
 }
 
-/* Адаптив */
 @media (max-width: 900px) {
   .indicators-row {
     flex-direction: column;
@@ -457,7 +427,7 @@ body {
     width: 100%;
   }
 }
-/* Правая секция - без фона и заголовка */
+
 .section-right {
   background-color: transparent !important;
   padding: 0 !important;
@@ -468,7 +438,6 @@ body {
   gap: 30px;
 }
 
-/* Контейнер для кнопок */
 .right-buttons {
   display: flex;
   flex-direction: column;
@@ -477,7 +446,6 @@ body {
   max-width: 200px;
 }
 
-/* Общие стили для кнопок */
 .right-btn {
   width: 100%;
   padding: 12px 20px;
@@ -496,23 +464,19 @@ body {
   filter: brightness(0.95);
 }
 
-/* Кнопка Старт */
 .start-btn {
   background-color: #D9E986;
 }
 
-/* Кнопка Стоп */
 .stop-btn {
   background-color: #F36035;
 }
 
-/* Кнопка Ремонт */
 .repair-btn {
   background-color: #B999EC;
 }
 
 
-/* Логотип в правой секции */
 .right-logo {
   display: flex;
   justify-content: center;
@@ -526,7 +490,6 @@ body {
   height: auto;
 }
 
-/* Убираем фон и заголовок у правой секции */
 .section-right .placeholder-content,
 .section-right .section-title-placeholder,
 .section-right .coming-soon {
@@ -544,7 +507,6 @@ body {
     width: 120px;
   }
 }
-/* ========== НИЖНИЕ БЛОКИ ========== */
 .bottom-blocks {
   display: flex;
   gap: 20px;
@@ -576,7 +538,6 @@ body {
   line-height: 1.4;
 }
 
-/* ========== ЛЕВЫЙ НИЖНИЙ БЛОК - АВАРИЙНАЯ СИГНАЛИЗАЦИЯ ========== */
 .alarm-section {
   background-color: #1a1b1d;
   border-radius: 8px;
@@ -584,13 +545,12 @@ body {
   height: 260px;
 }
 
-/* Ряды - растягиваются на всю ширину */
 .alarm-row {
   display: flex;
   flex-wrap: wrap;
   gap: 60px;
   margin-bottom: 12px;
-  justify-content: space-between; /* Равномерное распределение по ширине */
+  justify-content: space-between; 
   width: 100%;
 }
 
@@ -598,13 +558,12 @@ body {
   margin-bottom: 0;
 }
 
-/* Элементы - равномерно распределяются */
 .alarm-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 1; /* Каждый элемент занимает равную долю */
-  min-width: 0; /* Позволяет сжиматься */
+  flex: 1; 
+  min-width: 0; 
 }
 
 .alarm-led {
@@ -620,7 +579,6 @@ body {
   transform: scale(1.3);
 }
 
-/* Зеленые лампочки */
 .green-led {
   background-color: #3a4a1a;
 }
@@ -630,7 +588,6 @@ body {
   box-shadow: 0 0 5px #D9E986;
 }
 
-/* Красные лампочки */
 .red-led {
   background-color: #7a2a1a;
 }
@@ -659,7 +616,6 @@ body {
   height: auto;
 }
 
-/* Адаптив */
 @media (max-width: 900px) {
   .bottom-blocks {
     flex-direction: column;
@@ -674,7 +630,6 @@ body {
   }
 }
 
-/* ========== НИЖНИЕ БЛОКИ (БАЗОВЫЕ СТИЛИ) ========== */
 .bottom-blocks {
   display: flex;
   gap: 20px;
@@ -702,7 +657,6 @@ body {
   flex-shrink: 0;
 }
 
-/* ========== ЛЕВЫЙ НИЖНИЙ БЛОК (БАЗОВЫЕ СТИЛИ) ========== */
 .alarm-section {
   background-color: #1a1b1d;
   border-radius: 8px;
@@ -780,7 +734,6 @@ body {
   height: auto;
 }
 
-/* ========== ПРАВЫЙ НИЖНИЙ БЛОК (БАЗОВЫЕ СТИЛИ) ========== */
 .event-log-table-wrapper {
   background-color: #1a1b1d;
   border-radius: 8px;
@@ -858,19 +811,14 @@ body {
 }
 
 
-/* ========== МОДИФИКАТОРЫ ДЛЯ СТРАНИЦЫ 1 (ControlPage) ========== */
 .control-page .bottom-block-right {
   height: 343px;
 }
 
-
-
-/* ========== МОДИФИКАТОРЫ ДЛЯ СТРАНИЦЫ 2 (TransportControlPage) ========== */
 .transport-page .bottom-block-right {
   height: 365px;
 }
 
-/* ========== ТРАНСПОРТНАЯ СТРАНИЦА ========== */
 .transport-left-section {
   background-color: #1a1b1d;
   border-radius: 8px;
@@ -1004,7 +952,6 @@ body {
   }
 }
 
-/* ========== ТРАНСПОРТНАЯ СТРАНИЦА ========== */
 .transport-main-block {
   padding-bottom: 20px;
 }
@@ -1015,7 +962,7 @@ body {
   padding: 25px;
   display: flex;
   gap: 15px;
-  justify-content: flex-start; /* Добавляем выравнивание по левому краю */
+  justify-content: flex-start; 
 }
 
 .transport-left-column {
@@ -1024,7 +971,6 @@ body {
   gap: 25px;
 }
 
-/* Правая колонка - горизонтальное расположение */
 .transport-right-column {
   display: flex;
   flex-direction: row;
@@ -1032,11 +978,10 @@ body {
   justify-content: flex-start;
 }
 
-/* Контейнеры во 2 секции - без фона */
 .transport-col-vertical {
   flex: 1;
   text-align: center;
-  background-color: transparent; /* Убираем фон */
+  background-color: transparent; 
   border-radius: 8px;
 
 }
@@ -1048,12 +993,10 @@ body {
   height: 250px;
 }
 
-/* Стили для картинки 3 контейнера (Сушилка) */
 .transport-col-vertical:last-child .transport-image img {
   max-width: 80px;
   height: auto;
 }
-/* Картинка для Сушилки */
 .dryer-image img {
   max-width: 45px;
   height: auto;

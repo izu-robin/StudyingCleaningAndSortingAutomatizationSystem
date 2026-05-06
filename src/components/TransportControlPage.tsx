@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import '../App.css';
 
 const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
-  // Состояния для выбранных режимов (ручной/автомат)
   const [gate1Mode, setGate1Mode] = useState<'manual' | 'auto'>('manual');
  const [gate2Mode, setGate2Mode] = useState<'manual' | 'auto'>('manual');
   const [gate3Mode, setGate3Mode] = useState<'manual' | 'auto'>('manual');
@@ -10,30 +9,24 @@ const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const [transport2Mode, setTransport2Mode] = useState<'manual' | 'auto'>('manual');
   const [bunkerLevel, setBunkerLevel] = useState<'upper' | 'lower'>('upper');
 
-  // Состояния для Нория №1 и №2
   const [noria1Mode, setNoria1Mode] = useState<'manual' | 'auto'>('manual');
   const [noria2Mode, setNoria2Mode] = useState<'manual' | 'auto'>('manual');
   const [noria1On, setNoria1On] = useState<boolean>(false);
   const [noria2On, setNoria2On] = useState<boolean>(false);
 
-  // Состояние для Сушилки
   const [dryerOn, setDryerOn] = useState<boolean>(false);
   
-  // Состояния для Петкус №1 и №2
   const [petkus1Mode, setPetkus1Mode] = useState<'manual' | 'auto'>('manual');
   const [petkus2Mode, setPetkus2Mode] = useState<'manual' | 'auto'>('manual');
 
-  // Состояние для Вентилятора
   const [fanMode, setFanMode] = useState<'manual' | 'auto'>('manual');
   
-  // Состояния для кнопок Открыть/Закрыть
   const [gate1Open, setGate1Open] = useState<boolean>(false);
   const [gate2Open, setGate2Open] = useState<boolean>(false);
   const [gate3Open, setGate3Open] = useState<boolean>(false);
   const [transport1Open, setTransport1Open] = useState<boolean>(false);
   const [transport2Open, setTransport2Open] = useState<boolean>(false);
 
-  // Состояния для зеленых лампочек
   const [greenLeds, setGreenLeds] = useState({
     bunkerLow: false,
     dryingVent: false,
@@ -47,7 +40,6 @@ const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     petkus2On: false
   });
 
-  // Состояния для красных лампочек
   const [redLeds, setRedLeds] = useState({
     bunkerHigh: false,
     gateClosed: false,
@@ -66,19 +58,11 @@ const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     <div className="control-page transport-page">
       <button className="back-btn" onClick={onBack}>НАЗАД</button>
 
-     {/* ПЕРВЫЙ БОЛЬШОЙ БЛОК */}
 <div className="main-block transport-main-block">
   <div className="main-block-title">БЛОК УПРАВЛЕНИЯ ТРАНСПОРТИРОВКОЙ ЗЕРНА</div>
-  
-  {/* ОДИН ОБЩИЙ ФОН ДЛЯ ВСЕХ ТРЕХ СЕКЦИЙ */}
   <div className="transport-three-columns">
-    
-    {/* ПЕРВАЯ СЕКЦИЯ - два ряда сверху вниз */}
-    <div className="transport-section-first">
-      
-      {/* Ряд 1: Задвижка №1, Задвижка №2, Перекидной клапан */}
+    <div className="transport-section-first">  
       <div className="transport-cards-row">
-        {/* Задвижка №1 */}
         <div className="transport-col">
           <div className="transport-title">Задвижка №1</div>
           <div className="transport-image">
@@ -94,7 +78,6 @@ const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           </div>
         </div>
 
-        {/* Задвижка №2 */}
         <div className="transport-col">
           <div className="transport-title">Задвижка №2</div>
           <div className="transport-image">
@@ -110,7 +93,6 @@ const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           </div>
         </div>
 
-        {/* Перекидной клапан */}
         <div className="transport-col-special">
           <div className="transport-title">Перекидной клапан</div>
           <div className="transport-image-special">
@@ -127,9 +109,7 @@ const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         </div>
       </div>
 
-      {/* Ряд 2: Транспорт №1, Транспорт №2, Бункер */}
       <div className="transport-cards-row">
-        {/* Транспорт №1 */}
         <div className="transport-col">
           <div className="transport-title">Транспорт №1</div>
           <div className="transport-image">
@@ -145,7 +125,6 @@ const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           </div>
         </div>
 
-        {/* Транспорт №2 */}
         <div className="transport-col">
           <div className="transport-title">Транспорт №2</div>
           <div className="transport-image">
@@ -175,7 +154,6 @@ const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       </div>
     </div>
 
-    {/* ВТОРАЯ СЕКЦИЯ - три карточки слева направо */}
     <div className="transport-section-second">
       
       <div className="transport-col-vertical">
@@ -221,12 +199,9 @@ const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       
     </div>
 
-    {/* ТРЕТЬЯ СЕКЦИЯ - ОЧИСТКА И СОРТИРОВКА ЗЕРНА */}
     <div className="transport-section-third">
       <div className="transport-clean-title">ОЧИСТКА И СОРТИРОВКА ЗЕРНА</div>
-      
-      {/* Ряд 1: Петкус №1 и Петкус №2 */}
-      <div className="transport-clean-row">
+        <div className="transport-clean-row">
         <div className="transport-clean-col">
           <div className="transport-title">Петкус №1</div>
           <div className="transport-image">
@@ -250,7 +225,6 @@ const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         </div>
       </div>
 
-      {/* Ряд 2: Вентилятор (по центру) */}
       <div className="transport-clean-row-single">
         <div className="transport-clean-col-single">
           <div className="transport-title">Вентилятор</div>
@@ -268,10 +242,7 @@ const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   </div>
 </div>
 
-      {/* НИЖНЯЯ ЧАСТЬ */}
       <div className="bottom-blocks">
-        
-        {/* Левый нижний блок */}
         <div className="bottom-block bottom-block-left">
           <div className="bottom-block-title">
             БЛОК АВАРИЙНО-ПРЕДУПРЕДИТЕЛЬНОЙ<br />
@@ -391,7 +362,6 @@ const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           </div>
         </div>
         
-        {/* Правый нижний блок */}
         <div className="bottom-block bottom-block-right">
           <div className="bottom-block-title">
             ЖУРНАЛ<br />
