@@ -392,7 +392,7 @@ const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <td>Превышение допустимой температуры</td>
           </tr>
           <tr>
-            <td>Транспортер №1 (включен)</td>
+            <td>Транспортёр №1 (включен)</td>
             <td><span className="event-type notification">Уведомление</span></td>
             <td>2026-05-05 12:00:00</td>
             <td>Транспортер №1 запущен</td>
