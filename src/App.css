@@ -496,7 +496,6 @@ body {
   display: none;
 }
 
-/* Адаптив */
 @media (max-width: 900px) {
   .right-buttons {
     flex-direction: row;
@@ -542,7 +541,7 @@ body {
   background-color: #1a1b1d;
   border-radius: 8px;
   padding: 20px;
-  height: 260px;
+  height: 300px;
 }
 
 .alarm-row {
@@ -812,11 +811,11 @@ body {
 
 
 .control-page .bottom-block-right {
-  height: 343px;
+  height: 380px;
 }
 
 .transport-page .bottom-block-right {
-  height: 365px;
+  height: 386px;
 }
 
 .transport-left-section {
@@ -928,7 +927,6 @@ body {
   gap: 10px;
 }
 
-/* Адаптив */
 @media (max-width: 900px) {
   .transport-section-row {
     flex-direction: column;
@@ -1103,7 +1101,6 @@ body {
   color: #1B1B1B;
 }
 
-/* Адаптив */
 @media (max-width: 900px) {
   .transport-left-section {
     flex-direction: column;
@@ -1129,7 +1126,6 @@ body {
   }
 }
 
-/* ========== ТРЕТЬЯ СЕКЦИЯ - ОЧИСТКА И СОРТИРОВКА ЗЕРНА ========== */
 .transport-clean-section {
   background-color: #1a1b1d;
   border-radius: 8px;
@@ -1147,7 +1143,6 @@ body {
   letter-spacing: 1px;
 }
 
-/* Первый ряд - 2 контейнера */
 .transport-clean-row {
   display: flex;
   gap: 20px;
@@ -1165,7 +1160,6 @@ body {
   border-radius: 8px;
 }
 
-/* Второй ряд - 1 контейнер по центру */
 .transport-clean-row-single {
   display: flex;
   justify-content: center;
@@ -1181,7 +1175,6 @@ body {
   border-radius: 8px;
 }
 
-/* Адаптив */
 @media (max-width: 900px) {
   .transport-clean-row {
     flex-direction: column;
@@ -1194,17 +1187,15 @@ body {
     width: 100%;
   }
 }
-/* ========== ТРАНСПОРТНАЯ СТРАНИЦА - ОДИН ОБЩИЙ ФОН ========== */
 .transport-three-columns {
   display: flex;
   gap: 20px;
   align-items: stretch;
-  background-color: #1a1b1d; /* ОДИН ОБЩИЙ ФОН */
+  background-color: #1a1b1d; 
   border-radius: 8px;
   padding: 25px;
 }
 
-/* ПЕРВАЯ СЕКЦИЯ */
 .transport-section-first {
   flex: 1;
   display: flex;
@@ -1212,7 +1203,6 @@ body {
   gap: 25px;
 }
 
-/* ВТОРАЯ СЕКЦИЯ - КОНТЕЙНЕРЫ СЛЕВА НАПРАВО */
 .transport-section-second {
   flex: 1;
   display: flex;
@@ -1221,14 +1211,12 @@ body {
   justify-content: space-between;
 }
 
-/* ТРЕТЬЯ СЕКЦИЯ */
 .transport-section-third {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-/* КОНТЕЙНЕРЫ ВО ВТОРОЙ СЕКЦИИ */
 .transport-section-second .transport-col-vertical {
   flex: 1;
   text-align: center;
@@ -1247,7 +1235,6 @@ body {
   letter-spacing: 1px;
 }
 
-/* Ряд 1 - 2 контейнера */
 .transport-clean-row {
   display: flex;
   gap: 15px;
@@ -1263,7 +1250,6 @@ body {
   border-radius: 8px;
 }
 
-/* Ряд 2 - 1 контейнер по центру */
 .transport-clean-row-single {
   display: flex;
   justify-content: center;
@@ -1278,7 +1264,6 @@ body {
   border-radius: 8px;
 }
 
-/* Адаптив */
 @media (max-width: 900px) {
   .transport-three-columns {
     flex-direction: column;
@@ -1292,4 +1277,26 @@ body {
     flex-direction: column;
   }
 }
+@media (max-width: 2000) {
+.alarm-section {
+    background-color: #1a1b1d;
+    border-radius: 8px;
+    padding: 20px;
+}
+.alarm-section {
+    background-color: #1a1b1d;
+    border-radius: 8px;
+    padding: 20px;
+    height: 260px;
+}
+
+.control-page .bottom-block-right {
+  height: 380px;
+}
+
+.transport-page .bottom-block-right {
+  height: 386px;
+}
+}
+
 

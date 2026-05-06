@@ -245,8 +245,7 @@ const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       <div className="bottom-blocks">
         <div className="bottom-block bottom-block-left">
           <div className="bottom-block-title">
-            БЛОК АВАРИЙНО-ПРЕДУПРЕДИТЕЛЬНОЙ<br />
-            СИГНАЛИЗАЦИИ
+            БЛОК АВАРИЙНО-ПРЕДУПРЕДИТЕЛЬНОЙ СИГНАЛИЗАЦИИ
           </div>
           
           <div className="alarm-section">
@@ -364,8 +363,7 @@ const TransportControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         
         <div className="bottom-block bottom-block-right">
           <div className="bottom-block-title">
-            ЖУРНАЛ<br />
-            СОБЫТИЙ
+            ЖУРНАЛ СОБЫТИЙ
           </div>
           <div className="event-log-table-wrapper">
             <div className="event-log-table-container">
