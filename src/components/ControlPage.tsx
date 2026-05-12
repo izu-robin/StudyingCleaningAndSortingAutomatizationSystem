@@ -1,16 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ApiService from '../services/api';
 import '../App.css';
 
 const ControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const [selectedGrain, setSelectedGrain] = useState<string>('Сухая');
-  const [selectedVentilation, setSelectedVentilation] = useState<string>('Охлаждение свежеубранного зерна');
+  const [selectedVentilation, setSelectedVentilation] = useState<string>('Сушка зерна');
   const [selectedSeason, setSelectedSeason] = useState<string>('Осень');
 
-  const [temperature, setTemperature] = useState<number>(18);
-  const [coolingTime, setCoolingTime] = useState<number>(36);
-  const [humidity, setHumidity] = useState<number>(15.5);
-  const [dryingTime, setDryingTime] = useState<number>(2);
+  // Индикаторы
+  const [temperature, setTemperature] = useState<number>(15);
+  const [coolingTime, setCoolingTime] = useState<number>(20);
+  const [humidity, setHumidity] = useState<number>(15);
+  const [dryingTime, setDryingTime] = useState<number>(1);
   const [airSupply, setAirSupply] = useState<number>(150);
+
+  // Состояния лампочек
+  const [greenLeds, setGreenLeds] = useState<any>({});
+  const [redLeds, setRedLeds] = useState<any>({});
+  
+  // События
+  const [events, setEvents] = useState<any[]>([]);
+
+  useEffect(() => {
+    const loadInitialData = async () => {
+      const result = await ApiService.getAllData();
+      if (result.success && result.data) {
+        if (result.data.indicators) {
+          setTemperature(result.data.indicators.temperature);
+          setHumidity(result.data.indicators.humidity);
+          setCoolingTime(result.data.indicators.coolingTime);
+          setDryingTime(result.data.indicators.dryingTime);
+          setAirSupply(result.data.indicators.airSupply);
+        }
+        if (result.data.leds) {
+          setGreenLeds(result.data.leds.green || {});
+          setRedLeds(result.data.leds.red || {});
+        }
+        if (result.data.events) {
+          setEvents(result.data.events);
+        }
+        if (result.data.currentVentilation) {
+          setSelectedVentilation(result.data.currentVentilation);
+        }
+        if (result.data.currentSeason) {
+          setSelectedSeason(result.data.currentSeason);
+        }
+        if (result.data.currentGrain) {
+          setSelectedGrain(result.data.currentGrain);
+        }
+      }
+    };
+    
+    loadInitialData();
+
+    const unsubscribe = ApiService.subscribeToUpdates((data) => {
+      if (data.leds) {
+        setGreenLeds(data.leds.green);
+        setRedLeds(data.leds.red);
+      }
+      if (data.events) {
+        setEvents(data.events); 
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  const handleVentilationChange = async (ventilation: string) => {
+    setSelectedVentilation(ventilation);
+    const result = await ApiService.updateVentilation(ventilation, selectedSeason, selectedGrain);
+    if (result.success && result.indicators) {
+      setTemperature(result.indicators.temperature);
+      setHumidity(result.indicators.humidity);
+      setCoolingTime(result.indicators.coolingTime);
+    }
+  };
+
+  const handleSeasonChange = async (season: string) => {
+    setSelectedSeason(season);
+    const result = await ApiService.updateSeason(season);
+    if (result.success && result.indicators) {
+      setTemperature(result.indicators.temperature);
+      setHumidity(result.indicators.humidity);
+    }
+  };
 
   const grainTypes = [
     { name: 'Сухая', subtitle: 'влажность до 14%' },
@@ -20,10 +95,10 @@ const ControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   ];
 
   const ventilationTypes = [
-    { name: 'Охлаждение\nсвежеубранного зерна', subtitle: '100-150 м³/ч*т (24-48 ч)' },
-    { name: 'Профилактическое\nвентилирование', subtitle: '30-50 м³/ч*т (периодически каждые 1-3 месяца по 2 часа)' },
-    { name: 'Ликвидация\nсамосогревания', subtitle: '150-200 м³/ч*т (до нормализации 72 часа)' },
-    { name: 'Сушка зерна', subtitle: '200-300 м³/ч*т (по необходимости)' }
+    { name: 'Сушка зерна', subtitle: '200-300 м³/ч*т (по необходимости)' },
+    { name: 'Ликвидация самосогревания', subtitle: '150-200 м³/ч*т (до нормализации 72 часа)' },
+    { name: 'Профилактическое вентилирование', subtitle: '30-50 м³/ч*т (периодически каждые 1-3 месяца по 2 часа)' },
+    { name: 'Охлаждение свежеубранного зерна', subtitle: '100-150 м³/ч*т (24-48 ч)' }
   ];
 
   const seasonTypes = [
@@ -33,33 +108,6 @@ const ControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     { name: 'Лето', subtitle: '10-15 град. C' }
   ];
 
-  const [greenLeds, setGreenLeds] = useState({
-    bunkerLow: false,
-    dryingVent: false,
-    gate2Open: false,
-    conveyor1On: false,
-    conveyor2On: false,
-    noria1On: false,
-    noria2On: false,
-    petkus1On: false,
-    gateOpen: false,
-    petkus2On: false
-  });
-
-  const [redLeds, setRedLeds] = useState({
-    bunkerHigh: false,
-    gateClosed: false,
-    transport2Alarm: false,
-    transport1Alarm: false,
-    noria1Alarm: false,
-    gate1Alarm: false,
-    gate2Alarm: false,
-    tempAlarm: false,
-    noria2Alarm: false,
-    humidityAlarm: false,
-    selfWarming: false
-  });
-
   const getPercentageFromScale = (value: number, scaleValues: number[]): number => {
     const min = Math.min(...scaleValues);
     const max = Math.max(...scaleValues);
@@ -67,7 +115,7 @@ const ControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   };
 
   return (
-<div className="control-page control-page-style">
+    <div className="control-page control-page-style">
       <button className="back-btn" onClick={onBack}>НАЗАД</button>
 
       <div className="main-block">
@@ -108,14 +156,9 @@ const ControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                     <button
                       key={vent.name}
                       className={`action-button ventilation-button ${selectedVentilation === vent.name ? 'active' : ''}`}
-                      onClick={() => setSelectedVentilation(vent.name)}
+                      onClick={() => handleVentilationChange(vent.name)}
                     >
-                      {vent.name.split('\n').map((line, i) => (
-                        <React.Fragment key={i}>
-                          {line}
-                          {i < vent.name.split('\n').length - 1 && <br />}
-                        </React.Fragment>
-                      ))}
+                      {vent.name}
                     </button>
                   ))}
                 </div>
@@ -137,7 +180,7 @@ const ControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                     <button
                       key={season.name}
                       className={`action-button ${selectedSeason === season.name ? 'active' : ''}`}
-                      onClick={() => setSelectedSeason(season.name)}
+                      onClick={() => handleSeasonChange(season.name)}
                     >
                       {season.name}
                     </button>
@@ -185,7 +228,7 @@ const ControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                   <div className="indicator-bar-bg">
                     <div 
                       className="indicator-bar-fill" 
-                      style={{ width: `${getPercentageFromScale(humidity, [17, 16, 15, 14])}%` }}
+                      style={{ width: `${getPercentageFromScale(humidity, [14, 15, 16, 17])}%` }}
                     />
                   </div>
                   <div className="indicator-value-box">
@@ -193,10 +236,10 @@ const ControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                   </div>
                 </div>
                 <div className="indicator-scale">
-                  <div className="scale-mark" style={{ left: '0%' }}>17</div>
-                  <div className="scale-mark" style={{ left: '33.33%' }}>16</div>
-                  <div className="scale-mark" style={{ left: '66.66%' }}>15</div>
-                  <div className="scale-mark" style={{ left: '100%' }}>14</div>
+                  <div className="scale-mark" style={{ left: '0%' }}>14</div>
+                  <div className="scale-mark" style={{ left: '33.33%' }}>15</div>
+                  <div className="scale-mark" style={{ left: '66.66%' }}>16</div>
+                  <div className="scale-mark" style={{ left: '100%' }}>17</div>
                 </div>
               </div>
             </div>
@@ -293,86 +336,53 @@ const ControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           <div className="alarm-section">
             <div className="alarm-row">
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led green-led ${greenLeds.bunkerLow ? 'on' : 'off'}`}
-                  onClick={() => setGreenLeds(prev => ({ ...prev, bunkerLow: !prev.bunkerLow }))}
-                />
+                <div className={`alarm-led green-led ${greenLeds.bunkerLow ? 'on' : 'off'}`} />
                 <span className="alarm-text">Бункер нижний уровень</span>
               </div>
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led green-led ${greenLeds.dryingVent ? 'on' : 'off'}`}
-                  onClick={() => setGreenLeds(prev => ({ ...prev, dryingVent: !prev.dryingVent }))}
-                />
+                <div className={`alarm-led green-led ${greenLeds.dryingVent ? 'on' : 'off'}`} />
                 <span className="alarm-text">Сушка (вкл) Вентиляция</span>
               </div>
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led green-led ${greenLeds.gate2Open ? 'on' : 'off'}`}
-                  onClick={() => setGreenLeds(prev => ({ ...prev, gate2Open: !prev.gate2Open }))}
-                />
+                <div className={`alarm-led green-led ${greenLeds.gate1Open ? 'on' : 'off'}`} />
                 <span className="alarm-text">Задвижка №1 (открыта)</span>
               </div>
-               <div className="alarm-item">
-                <div 
-                  className={`alarm-led green-led ${greenLeds.gate2Open ? 'on' : 'off'}`}
-                  onClick={() => setGreenLeds(prev => ({ ...prev, gate2Open: !prev.gate2Open }))}
-                />
+              <div className="alarm-item">
+                <div className={`alarm-led green-led ${greenLeds.gate2Open ? 'on' : 'off'}`} />
                 <span className="alarm-text">Задвижка №2 (открыта)</span>
               </div>
             </div>
             
             <div className="alarm-row">
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led green-led ${greenLeds.conveyor1On ? 'on' : 'off'}`}
-                  onClick={() => setGreenLeds(prev => ({ ...prev, conveyor1On: !prev.conveyor1On }))}
-                />
+                <div className={`alarm-led green-led ${greenLeds.conveyor1On ? 'on' : 'off'}`} />
                 <span className="alarm-text">Транспортер №1 (включен)</span>
               </div>
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led green-led ${greenLeds.conveyor2On ? 'on' : 'off'}`}
-                  onClick={() => setGreenLeds(prev => ({ ...prev, conveyor2On: !prev.conveyor2On }))}
-                />
+                <div className={`alarm-led green-led ${greenLeds.conveyor2On ? 'on' : 'off'}`} />
                 <span className="alarm-text">Транспортер №2 (включен)</span>
               </div>
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led green-led ${greenLeds.noria1On ? 'on' : 'off'}`}
-                  onClick={() => setGreenLeds(prev => ({ ...prev, noria1On: !prev.noria1On }))}
-                />
+                <div className={`alarm-led green-led ${greenLeds.noria1On ? 'on' : 'off'}`} />
                 <span className="alarm-text">Нория №1 (включена)</span>
               </div>
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led green-led ${greenLeds.noria2On ? 'on' : 'off'}`}
-                  onClick={() => setGreenLeds(prev => ({ ...prev, noria2On: !prev.noria2On }))}
-                />
+                <div className={`alarm-led green-led ${greenLeds.noria2On ? 'on' : 'off'}`} />
                 <span className="alarm-text">Нория №2 (включена)</span>
               </div>
             </div>
             
             <div className="alarm-row">
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led green-led ${greenLeds.petkus1On ? 'on' : 'off'}`}
-                  onClick={() => setGreenLeds(prev => ({ ...prev, petkus1On: !prev.petkus1On }))}
-                />
+                <div className={`alarm-led green-led ${greenLeds.petkus1On ? 'on' : 'off'}`} />
                 <span className="alarm-text">Петкус №1 (включен)</span>
               </div>
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led green-led ${greenLeds.gateOpen ? 'on' : 'off'}`}
-                  onClick={() => setGreenLeds(prev => ({ ...prev, gateOpen: !prev.gateOpen }))}
-                />
+                <div className={`alarm-led green-led ${greenLeds.gateOpen ? 'on' : 'off'}`} />
                 <span className="alarm-text">Перекидной клапан (открыт)</span>
               </div>
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led green-led ${greenLeds.petkus2On ? 'on' : 'off'}`}
-                  onClick={() => setGreenLeds(prev => ({ ...prev, petkus2On: !prev.petkus2On }))}
-                />
+                <div className={`alarm-led green-led ${greenLeds.petkus2On ? 'on' : 'off'}`} />
                 <span className="alarm-text">Петкус №2 (включен)</span>
               </div>
             </div>
@@ -383,162 +393,101 @@ const ControlPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             
             <div className="alarm-row">
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led red-led ${redLeds.bunkerHigh ? 'on' : 'off'}`}
-                  onClick={() => setRedLeds(prev => ({ ...prev, bunkerHigh: !prev.bunkerHigh }))}
-                />
+                <div className={`alarm-led red-led ${redLeds.bunkerHigh ? 'on' : 'off'}`} />
                 <span className="alarm-text">Бункер верхний уровень</span>
               </div>
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led red-led ${redLeds.gateClosed ? 'on' : 'off'}`}
-                  onClick={() => setRedLeds(prev => ({ ...prev, gateClosed: !prev.gateClosed }))}
-                />
+                <div className={`alarm-led red-led ${redLeds.gateClosed ? 'on' : 'off'}`} />
                 <span className="alarm-text">Перекидной клапан (закрыт)</span>
               </div>
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led red-led ${redLeds.transport2Alarm ? 'on' : 'off'}`}
-                  onClick={() => setRedLeds(prev => ({ ...prev, transport2Alarm: !prev.transport2Alarm }))}
-                />
+                <div className={`alarm-led red-led ${redLeds.transport2Alarm ? 'on' : 'off'}`} />
                 <span className="alarm-text">Транспорт №2 (авария)</span>
               </div>
             </div>
             
             <div className="alarm-row">
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led red-led ${redLeds.transport1Alarm ? 'on' : 'off'}`}
-                  onClick={() => setRedLeds(prev => ({ ...prev, transport1Alarm: !prev.transport1Alarm }))}
-                />
+                <div className={`alarm-led red-led ${redLeds.transport1Alarm ? 'on' : 'off'}`} />
                 <span className="alarm-text">Транспорт №1 (авария)</span>
               </div>
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led red-led ${redLeds.noria1Alarm ? 'on' : 'off'}`}
-                  onClick={() => setRedLeds(prev => ({ ...prev, noria1Alarm: !prev.noria1Alarm }))}
-                />
+                <div className={`alarm-led red-led ${redLeds.noria1Alarm ? 'on' : 'off'}`} />
                 <span className="alarm-text">Нория №1 (авария)</span>
               </div>
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led red-led ${redLeds.gate1Alarm ? 'on' : 'off'}`}
-                  onClick={() => setRedLeds(prev => ({ ...prev, gate1Alarm: !prev.gate1Alarm }))}
-                />
+                <div className={`alarm-led red-led ${redLeds.gate1Alarm ? 'on' : 'off'}`} />
                 <span className="alarm-text">Задвижка №1 (авария)</span>
               </div>
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led red-led ${redLeds.gate2Alarm ? 'on' : 'off'}`}
-                  onClick={() => setRedLeds(prev => ({ ...prev, gate2Alarm: !prev.gate2Alarm }))}
-                />
+                <div className={`alarm-led red-led ${redLeds.gate2Alarm ? 'on' : 'off'}`} />
                 <span className="alarm-text">Задвижка №2 (авария)</span>
               </div>
             </div>
             
             <div className="alarm-row">
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led red-led ${redLeds.tempAlarm ? 'on' : 'off'}`}
-                  onClick={() => setRedLeds(prev => ({ ...prev, tempAlarm: !prev.tempAlarm }))}
-                />
+                <div className={`alarm-led red-led ${redLeds.tempAlarm ? 'on' : 'off'}`} />
                 <span className="alarm-text">Температура (авария)</span>
               </div>
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led red-led ${redLeds.noria2Alarm ? 'on' : 'off'}`}
-                  onClick={() => setRedLeds(prev => ({ ...prev, noria2Alarm: !prev.noria2Alarm }))}
-                />
+                <div className={`alarm-led red-led ${redLeds.noria2Alarm ? 'on' : 'off'}`} />
                 <span className="alarm-text">Нория №2 (авария)</span>
               </div>
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led red-led ${redLeds.humidityAlarm ? 'on' : 'off'}`}
-                  onClick={() => setRedLeds(prev => ({ ...prev, humidityAlarm: !prev.humidityAlarm }))}
-                />
+                <div className={`alarm-led red-led ${redLeds.humidityAlarm ? 'on' : 'off'}`} />
                 <span className="alarm-text">Влажность (авария)</span>
               </div>
               <div className="alarm-item">
-                <div 
-                  className={`alarm-led red-led ${redLeds.selfWarming ? 'on' : 'off'}`}
-                  onClick={() => setRedLeds(prev => ({ ...prev, selfWarming: !prev.selfWarming }))}
-                />
+                <div className={`alarm-led red-led ${redLeds.selfWarming ? 'on' : 'off'}`} />
                 <span className="alarm-text">Самосогревание</span>
               </div>
             </div>
           </div>
         </div>
         
-<div className="bottom-block bottom-block-right">
-  <div className="bottom-block-title">
-    ЖУРНАЛ СОБЫТИЙ
-  </div>
-  
-  <div className="event-log-table-wrapper">
-    <div className="event-log-table-container">
-      <table className="event-log-table">
-        <thead>
-          <tr>
-            <th>Название</th>
-            <th>Тип</th>
-            <th>Дата</th>
-            <th>Описание</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Бункер нижний уровень</td>
-            <td><span className="event-type notification">Уведомление</span></td>
-            <td>2026-05-05 14:30:25</td>
-            <td>Достигнут нижний уровень бункера</td>
-          </tr>
-          <tr>
-            <td>Температура (авария)</td>
-            <td><span className="event-type alarm">Авария</span></td>
-            <td>2026-05-05 13:15:10</td>
-            <td>Превышение допустимой температуры</td>
-          </tr>
-          <tr>
-            <td>Транспортер №1 (включен)</td>
-            <td><span className="event-type notification">Уведомление</span></td>
-            <td>2026-05-05 12:00:00</td>
-            <td>Транспортер №1 запущен</td>
-          </tr>
-          <tr>
-            <td>Нория №1 (авария)</td>
-            <td><span className="event-type alarm">Авария</span></td>
-            <td>2026-05-05 10:45:30</td>
-            <td>Остановка нории №1</td>
-          </tr>
-          <tr>
-            <td>Задвижка №2 (открыта)</td>
-            <td><span className="event-type notification">Уведомление</span></td>
-            <td>2026-05-05 09:20:15</td>
-            <td>Задвижка №2 открыта</td>
-          </tr>
-          <tr>
-            <td>Влажность (авария)</td>
-            <td><span className="event-type alarm">Авария</span></td>
-            <td>2026-05-05 08:00:00</td>
-            <td>Превышение допустимой влажности</td>
-          </tr>
-          <tr>
-            <td>Самосогревание</td>
-            <td><span className="event-type alarm">Авария</span></td>
-            <td>2026-05-04 22:30:00</td>
-            <td>Обнаружено самосогревание зерна</td>
-          </tr>
-          <tr>
-            <td>Перекидной клапан (открыт)</td>
-            <td><span className="event-type notification">Уведомление</span></td>
-            <td>2026-05-04 18:45:00</td>
-            <td>Клапан перекидной открыт</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
+        <div className="bottom-block bottom-block-right">
+          <div className="bottom-block-title">
+            ЖУРНАЛ СОБЫТИЙ
+          </div>
+          
+          <div className="event-log-table-wrapper">
+            <div className="event-log-table-container">
+              <table className="event-log-table">
+                <thead>
+                  <tr>
+                    <th>Название</th>
+                    <th>Тип</th>
+                    <th>Дата</th>
+                    <th>Описание</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {events.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} style={{ textAlign: 'center', padding: '20px' }}>
+                        Нет событий
+                      </td>
+                    </tr>
+                  ) : (
+                    events.map((event, index) => (
+                      <tr key={index}>
+                        <td>{event.name}</td>
+                        <td>
+                          <span className={`event-type ${event.type === 'alarm' ? 'alarm' : 'notification'}`}>
+                            {event.type === 'alarm' ? ' Авария' : ' Уведомление'}
+                          </span>
+                        </td>
+                        <td>{event.date}</td>
+                        <td>{event.description}</td>
+                       </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
         
       </div>
     </div>
